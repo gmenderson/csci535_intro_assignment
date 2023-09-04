@@ -16,6 +16,10 @@ def find_leaf_nodes(node, leaf_nodes):
         for child in node: 
             find_leaf_nodes(child, leaf_nodes) 
 
+# Function to annotate a PNG file
+def annotate_png(png_file): 
+     print("test")
+
 if __name__ == "__main__":
     print("Enter the path of the XML file to parse:")
     xml_file = input()
@@ -26,3 +30,6 @@ if __name__ == "__main__":
 
     leaf_nodes = []
     find_leaf_nodes(root, leaf_nodes)
+
+    png = Image.open(png_file)
+    
