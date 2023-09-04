@@ -1,7 +1,8 @@
 from PIL import Image, ImageDraw
 import xml.etree.ElementTree as ET
+import sys
 
-# Function to parse the XML file
+# Function to parse the XML file and return the root of the tree
 def parse_xml(xml_file):
     tree = ET.parse(xml_file)
     root = tree.getroot()
@@ -17,19 +18,55 @@ def find_leaf_nodes(node, leaf_nodes):
             find_leaf_nodes(child, leaf_nodes) 
 
 # Function to annotate a PNG file
-def annotate_png(png_file): 
-     print("test")
-
-if __name__ == "__main__":
-    print("Enter the path of the XML file to parse:")
-    xml_file = input()
-    print("Enter the path of the PNG file to be annotated:")
-    png_file = input()
-    
-    root = parse_xml(xml_file)
-
-    leaf_nodes = []
-    find_leaf_nodes(root, leaf_nodes)
-
+def annotate_png(png_file, annotated_png, leaf_nodes): 
     png = Image.open(png_file)
-    
+    draw = ImageDraw.Draw(png)
+
+    # Extract each bound value from leaf elemenets
+    for bounds in leaf_nodes: 
+        values = bounds.split('][')
+        pair1 = values[0].strip('[]').split(',')
+        pair2 = values[1].strip('[]').split(',')
+        x1 = int(pair1[0])
+        y1 = int(pair1[1])
+        x2 = int(pair2[0])
+        y2 = int(pair2[1])
+        draw.rectangle([x1, y1, x2, y2], outline="yellow", width=4)
+
+    # Save the annotated image in the current directory
+    png.save(annotated_png)
+    print("Annotated image saved in current directory.")
+
+# Main Function 
+if __name__ == "__main__":
+    while True: 
+        # Obtain path of the XML/PNG pair, let the user specify name of the annotated image
+        print("Enter the path of the XML file to parse:")
+        xml_file = input()
+        print("Enter the path of the PNG file to be annotated:")
+        png_file = input()
+        print("Enter the desired name of the new annotated image")
+        annotated_png_file = input()
+        
+        # Find root of the XML tree
+        root = parse_xml(xml_file)
+
+        # Create an empty list for storing leaf nodes
+        leaf_nodes = []
+        find_leaf_nodes(root, leaf_nodes)
+
+        # Annotate the PNG screenshot and save the new image
+        annotate_png(png_file, annotated_png_file, leaf_nodes)
+
+        # Reenter main loop, exit, or error handling
+        while True: 
+            print("Enter (y) to continue with another XML/PNG pair, or (n) to exit the program:")
+            answer = input()
+
+            if answer == 'y' or answer == 'Y': 
+                break
+            elif answer == 'n' or answer == 'N': 
+                sys.exit(0)
+            else: 
+                print("Invalid input.")
+                continue
