@@ -7,4 +7,6 @@ To compile and run this code, first clone the repository in your desired directo
 
 I will briefly provide an explaination for the parser.py source code. Starting with the libraries used, Pillow was chosen as the image processing tool because it is simple and fast, an ideal tool for annotating simple images. Xml.etree.ElementTree was chosen to parse the xml files because it is a built in python module fore parsing XML files. Sys and os were used for behind the scenes operations such as generating file paths and exiting the script. 
 
-Moving on to the functions, parse_xml is a simple function that parses an existing XML file and returns the root of the element tree. 
+Moving on to the functions, parse_xml is a simple function that parses an existing XML file and returns the root of the element tree. The find_leaf_nodes recursively searches the XML tree for leaf node. It stores a list of the bounds parameters for each leaf node. The annotate_png function is used to draw a rectangles on the leaf components on the screenshot PNG file, corresponding to the bounds of leaf components obtained from the XML. This image is then saved to the annotated_images directory. 
+
+Because parser.py is a relatively small and simple program, I decided to contain the functions and main in the same file. The main function asks for the paths of the XML/PNG pairs and the name of the new image. It the annotates and saves the image in /annotated_images. The user can then choose to loop the main function with a different XML/PNG pair. Users can also exit the program if desired.
