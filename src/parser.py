@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw
 import xml.etree.ElementTree as ET
 import sys
+import os
 
 # Function to parse the XML file and return the root of the tree
 def parse_xml(xml_file):
@@ -33,8 +34,11 @@ def annotate_png(png_file, annotated_png, leaf_nodes):
         y2 = int(pair2[1])
         draw.rectangle([x1, y1, x2, y2], outline="yellow", width=4)
 
-    # Save the annotated image in the current directory
-    png.save(annotated_png)
+    # Qualify the path of the dir where the annotated images are to be saved, and save the new image
+    script_directory = os.path.dirname(os.path.realpath(__file__))
+    annotated_dir = os.path.join(script_directory, "..", "data", "annotated_images")
+    annotated_png_path = os.path.join(annotated_dir, annotated_png)
+    png.save(annotated_png_path)
     print("Annotated image saved in current directory.")
 
 # Main Function 
